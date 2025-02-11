@@ -10,22 +10,22 @@ const router = Router()
 
 /**
  * 建立新的 User (註冊)
- * POST /users
- * Body: { username, email, password }
+ * POST /
+ * Body: { user, email, password }
  */
 router.post("/register", async (req: Request, res: Response): Promise<void> => {
     try {
-        const { username, email, password } = req.body
+        const { user, email, password } = req.body
 
         // 1. 基本檢查
-        if (!username || !email || !password) {
+        if (!user || !email || !password) {
             res.status(400).json({ code: 400, error: "Missing required fields" })
             return
         }
 
         // 2. 檢查 username 或 email 是否已存在
         const existingUser = await UserModel.findOne({
-            $or: [{ username }, { email }],
+            $or: [{ user }, { email }],
         })
         if (existingUser) {
             res.status(409).json({ code: 409, error: "Username or email already taken" })
@@ -37,13 +37,13 @@ router.post("/register", async (req: Request, res: Response): Promise<void> => {
         const hashedPassword = await bcrypt.hash(password, saltRounds)
 
         // 3. 建立 User
-        const newUser = new UserModel({ username, email, password: hashedPassword })
+        const newUser = new UserModel({ user, email, password: hashedPassword })
         await newUser.save()
 
         // 4. 回傳成功資訊
         res.status(201).json({
-            _id: newUser._id,
-            username: newUser.user,
+            id: newUser._id,
+            user: newUser.user,
             email: newUser.email,
         })
     } catch (err) {
@@ -54,21 +54,21 @@ router.post("/register", async (req: Request, res: Response): Promise<void> => {
 
 /**
  * 登入 (POST /login)
- * Body: { username, password }
+ * Body: { user, password }
  */
 router.post("/login", async (req: Request, res: Response): Promise<void> => {
     try {
-        const { username, password } = req.body
+        const { user, password } = req.body
 
         // 1. 檢查是否有傳 username 與 password
-        if (!username || !password) {
+        if (!user || !password) {
             res.status(400).json({ code: 400, error: "Missing username or password" })
             return
         }
 
         // 2. 查詢是否有此使用者
-        const user = await UserModel.findOne({ username })
-        if (!user) {
+        const userData = await UserModel.findOne({ user })
+        if (!userData) {
             res.status(404).json({ code: 404, error: "User not found" })
             return
         }
@@ -81,26 +81,25 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
         }
 
         // 4. 產生 JWT (或是建立 session)
-        //    secret 可放在 .env，例如 process.env.JWT_SECRET
         if (!process.env.JWT_SECRET) {
             res.status(500).json({ code: 500, error: "JWT_SECRET is not set in the environment variables" })
             return
         }
         const userId = user._id as Types.ObjectId
         const token = jwt.sign(
-            { userId: userId, user: user.user, email: user.email, avatar: user.avatar } satisfies UserPayload,
+            { userId: userId, user: user.user, email: user.email } satisfies UserPayload,
             process.env.JWT_SECRET,
-            { expiresIn: "1h" }, // token 有效期 (1 小時)
+            { expiresIn: "3h" }, // token 有效期 (3 小時)
         )
 
         // 5. 把使用者資訊存入 cookie
         // 修改 cookie 設置方式
         if (process.env.NODE_ENV === "production") {
             res.cookie("token", token, {
-                httpOnly: true,
-                secure: true,
-                sameSite: "strict", // 改用 strict 增加安全性
-                maxAge: 24 * 60 * 60 * 1000,
+                httpOnly: true, // 防止 JS 存取
+                secure: true, // 只允許 HTTPS 存取
+                sameSite: "strict", // 防止跨站攻擊
+                maxAge: 24 * 60 * 60 * 1000, // 一天
             })
         } else {
             res.cookie("token", token, {
@@ -116,8 +115,8 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
             message: "Login successful",
             token,
             user: {
-                _id: user._id,
-                username: user.user,
+                id: user._id,
+                user: user.user,
                 email: user.email,
             },
         })

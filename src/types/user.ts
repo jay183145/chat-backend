@@ -15,10 +15,9 @@ export type User = {
     avatar: string
 }
 
-export // 用於 JWT 的 payload
-interface UserPayload {
+// 用於 JWT 的 payload
+export interface UserPayload {
     userId: Types.ObjectId
     user: string
     email: string
-    avatar: string
 }
