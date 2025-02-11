@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { Conversation } from "../types/conversation"
+import { Conversation } from "../types/conversation.js"
 
 const conversationSchema = new mongoose.Schema<Conversation>({
     id: { type: Number, required: true, unique: true },

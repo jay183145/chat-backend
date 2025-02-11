@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 import dotenv from "dotenv"
-import Conversation from "../models/Conversation"
-import User from "../models/User"
+import Conversation from "../models/Conversation.js"
+import User from "../models/User.js"
 
 dotenv.config()
 

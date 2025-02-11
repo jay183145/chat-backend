@@ -1,5 +1,4 @@
 import { Types } from "mongoose"
-import { UserDocument } from "./user"
 
 export interface Conversation extends Document {
     id: number

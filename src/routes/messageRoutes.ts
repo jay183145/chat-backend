@@ -1,6 +1,6 @@
 // backend/routes/messageRoutes.ts
 import { Router, Request, Response } from "express"
-import Message from "../models/Message"
+import Message from "../models/Message.js"
 
 const router = Router()
 
@@ -16,7 +16,7 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
     try {
         const messages = await Message.find({ conversationId }).sort({ timestamp: 1 })
         res.json(messages)
-    } catch (error: any) {
+    } catch (error) {
         res.status(500).json({ error: error.message })
     }
 })

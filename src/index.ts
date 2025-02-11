@@ -2,8 +2,8 @@ import express from "express"
 import mongoose from "mongoose"
 import cors from "cors"
 import dotenv from "dotenv"
-import conversationRoutes from "./routes/conversationRoutes"
-import messageRoutes from "./routes/messageRoutes"
+import conversationRoutes from "./routes/conversationRoutes.js"
+import messageRoutes from "./routes/messageRoutes.js"
 
 dotenv.config()
 

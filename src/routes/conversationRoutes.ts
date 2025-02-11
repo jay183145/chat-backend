@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express"
-import Conversation from "../models/Conversation"
-import Message from "../models/Message"
-import { CreateMessagePayload } from "../types/conversation"
+import Conversation from "../models/Conversation.js"
+import Message from "../models/Message.js"
+import { CreateMessagePayload } from "../types/conversation.js"
 
 const router = Router()
 
@@ -15,7 +15,7 @@ router.get("/", async (req: Request, res: Response) => {
         // 將 MongoDB 的 _id 改為 id 傳給前端
         const data = conversations.map((conv) => ({ id: conv._id, ...conv.toObject() }))
         res.json(data)
-    } catch (error: any) {
+    } catch (error) {
         res.status(500).json({ error: error.message })
     }
 })
@@ -48,7 +48,7 @@ router.post("/:id/messages/create", async (req: Request, res: Response) => {
         io.emit("newMessage", savedMessage)
 
         res.status(201).json(savedMessage)
-    } catch (error: any) {
+    } catch (error) {
         res.status(500).json({ error: error.message })
     }
 })

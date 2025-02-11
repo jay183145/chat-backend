@@ -1,9 +1,9 @@
 // routes/users.ts
 import { Router, Request, Response } from "express"
-import UserModel from "../models/User"
+import UserModel from "../models/User.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import { UserPayload } from "../types/user"
+import { UserPayload } from "../types/user.js"
 import { Types } from "mongoose"
 
 const router = Router()
