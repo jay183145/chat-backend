@@ -8,7 +8,8 @@
         "start": "node dist/index.js",
         "dev": "tsc && node --watch dist/index.js",
         "watch": "tsc --watch",
-        "gen-default-users": "tsc && node dist/scripts/seedUsers.js"
+        "gen-default-users": "tsc && node dist/scripts/seedUsers.js",
+        "gen-default-conversations": "tsc && node dist/scripts/seedConversations.js"
     },
     "keywords": [],
     "author": "",

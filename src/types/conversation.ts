@@ -1,6 +1,7 @@
 import { UserDocument } from "./user"
 
 export interface Conversation extends Document {
+    id: number
     participants: UserDocument[]
     lastMessage: string
     timestamp: number
