@@ -1,11 +1,7 @@
-export interface Participant {
-    userId: number
-    user: string
-    avatar: string
-}
+import { UserDocument } from "./user"
 
 export interface Conversation extends Document {
-    participants: Participant[]
+    participants: UserDocument[]
     lastMessage: string
     timestamp: number
 }
