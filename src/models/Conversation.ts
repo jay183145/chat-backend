@@ -5,8 +5,9 @@ const conversationSchema = new mongoose.Schema<Conversation>({
     id: { type: Number, required: true, unique: true },
     participants: [
         {
-            username: { type: String, ref: "User", required: true },
-            avatar: { type: String, required: false },
+            user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+            username: String,
+            avatar: String,
         },
     ],
     lastMessage: { type: String, default: "" },

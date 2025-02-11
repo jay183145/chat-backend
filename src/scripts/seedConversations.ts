@@ -1,6 +1,7 @@
 import mongoose from "mongoose"
 import dotenv from "dotenv"
 import Conversation from "../models/Conversation"
+import User from "../models/User"
 
 dotenv.config()
 
@@ -16,8 +17,47 @@ async function seedConversations() {
         await mongoose.connect(MONGO_URI)
         console.log("MongoDB connected...")
 
-        // 插入 conversation 資料
-        await Conversation.insertMany(conversations)
+        // 刪除舊的 Conversations 資料
+        await Conversation.deleteMany({})
+        console.log("舊的 Conversations 資料已刪除！")
+
+        // 先從 User 集合中撈出所有使用者資料，建立 username 對應 user 的 mapping
+        const users = await User.find({})
+        const userMap = {}
+        users.forEach((user) => {
+            // 假設 username 為唯一鍵
+            userMap[user.username] = user
+        })
+
+        // 根據 username 將 conversations 中的 participants 更新為正確的 user 資料
+        const updatedConversations = conversations.map((conv) => {
+            const updatedParticipants = conv.participants
+                .map((participant) => {
+                    const user = userMap[participant.username]
+                    if (!user) {
+                        console.warn(`User with username "${participant.username}" not found in database.`)
+                        // 若找不到則保留原資料或視情況處理
+                        return null
+                    }
+
+                    return {
+                        user: user._id, // 儲存使用者參考
+                        username: user.username,
+                        avatar: user.avatar, // 這邊取自 user 資料，確保 avatar 是正確的
+                    }
+                })
+                .filter((p) => p !== null) // 過濾掉找不到 user 的項目
+
+            return {
+                id: conv.id,
+                participants: updatedParticipants,
+                lastMessage: conv.lastMessage,
+                timestamp: conv.timestamp,
+            }
+        })
+
+        // 插入更新後的 conversations 資料
+        await Conversation.insertMany(updatedConversations)
         console.log("Conversations 資料插入成功！")
     } catch (error) {
         console.error("插入 Conversations 資料時發生錯誤：", error)

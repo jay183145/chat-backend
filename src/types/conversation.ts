@@ -1,8 +1,13 @@
+import { Types } from "mongoose"
 import { UserDocument } from "./user"
 
 export interface Conversation extends Document {
     id: number
-    participants: UserDocument[]
+    participants: {
+        user: Types.ObjectId
+        username: string
+        avatar: string
+    }[]
     lastMessage: string
     timestamp: number
 }
