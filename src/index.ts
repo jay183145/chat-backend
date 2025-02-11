@@ -4,6 +4,7 @@ import cors from "cors"
 import dotenv from "dotenv"
 import conversationRoutes from "./routes/conversationRoutes.js"
 import messageRoutes from "./routes/messageRoutes.js"
+import userRoutes from "./routes/userRoutes.js"
 
 dotenv.config()
 
@@ -23,6 +24,7 @@ app.use(
 app.use(express.json())
 app.use("/conversations", conversationRoutes)
 app.use("/messages", messageRoutes)
+app.use("/", userRoutes)
 
 // 連接到 MongoDB
 const connectDB = async () => {
