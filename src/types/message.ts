@@ -1,18 +1,22 @@
-import { Document, Types } from "mongoose"
+import { Document } from "mongoose"
 
-export interface Reactions {
+export interface MessageDocument extends Document, Message {}
+
+export interface Message {
+    conversationId: number
+    userId: number
+    user: string
+    avatar: string
+    messageType: MessageType
+    message: string
+    reactions: Reaction
+    timestamp: number
+}
+
+export type Reaction = {
     like: number
     love: number
     laugh: number
 }
 
-export interface Message extends Document {
-    conversationId: Types.ObjectId
-    userId: number
-    user: string
-    avatar?: string
-    messageType: "text" | "image" | "system"
-    message: string
-    reactions: Reactions
-    timestamp: number
-}
+export type MessageType = "text" | "image" | "system"

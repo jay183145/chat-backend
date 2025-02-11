@@ -1,12 +1,9 @@
-import { Types } from "mongoose"
+import { User } from "./user.js"
 
-export interface Conversation extends Document {
+export interface ConversationDocument extends Document, Conversation {}
+export interface Conversation {
     id: number
-    participants: {
-        user: Types.ObjectId
-        username: string
-        avatar: string
-    }[]
+    participants: User[]
     lastMessage: string
     timestamp: number
 }

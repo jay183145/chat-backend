@@ -1,13 +1,13 @@
 import mongoose from "mongoose"
-import { Conversation } from "../types/conversation.js"
+import { ConversationDocument } from "../types/conversation.js"
 
-const conversationSchema = new mongoose.Schema<Conversation>({
+const conversationSchema = new mongoose.Schema<ConversationDocument>({
     id: { type: Number, required: true, unique: true },
     participants: [
         {
-            user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-            username: String,
-            avatar: String,
+            userId: { type: Number, required: true },
+            user: { type: String, required: true },
+            avatar: { type: String, required: false },
         },
     ],
     lastMessage: { type: String, default: "" },

@@ -1,6 +1,7 @@
 import mongoose from "mongoose"
 import User from "../models/User.js"
 import dotenv from "dotenv"
+import { users } from "../data/defaultUsers.js"
 
 dotenv.config()
 
@@ -14,6 +15,10 @@ async function seedUsers() {
         }
         await mongoose.connect(MONGO_URI)
         console.log("MongoDB connected...")
+
+        // // 刪除舊的 User 資料
+        await User.deleteMany({})
+        console.log("舊的 User 資料已刪除！")
 
         // Insert the users into the collection
         await User.insertMany(users)
@@ -29,36 +34,3 @@ async function seedUsers() {
 
 // Execute the seed function
 seedUsers()
-
-const users = [
-    {
-        username: "Alice",
-        email: "alice@example.com",
-        avatar: "https://i.pravatar.cc/150?img=1",
-        password: "123456",
-    },
-    {
-        username: "Bob",
-        email: "bob@example.com",
-        avatar: "https://i.pravatar.cc/150?img=2",
-        password: "123456",
-    },
-    {
-        username: "Charlie",
-        email: "charlie@example.com",
-        avatar: "https://i.pravatar.cc/150?img=3",
-        password: "123456",
-    },
-    {
-        username: "David",
-        email: "david@example.com",
-        avatar: "https://i.pravatar.cc/150?img=4",
-        password: "123456",
-    },
-    {
-        username: "Emma",
-        email: "emma@example.com",
-        avatar: "https://i.pravatar.cc/150?img=5",
-        password: "123456",
-    },
-]

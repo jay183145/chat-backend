@@ -10,7 +10,8 @@
         "dev": "tsc && node --watch dist/index.js",
         "watch": "tsc --watch",
         "gen-default-users": "tsc && node dist/scripts/seedUsers.js",
-        "gen-default-conversations": "tsc && node dist/scripts/seedConversations.js"
+        "gen-default-conversations": "tsc && node dist/scripts/seedConversations.js",
+        "gen-default-messages": "tsc && node dist/scripts/seedMessages.js"
     },
     "keywords": [],
     "author": "",

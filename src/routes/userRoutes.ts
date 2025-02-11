@@ -43,7 +43,7 @@ router.post("/register", async (req: Request, res: Response): Promise<void> => {
         // 4. 回傳成功資訊
         res.status(201).json({
             _id: newUser._id,
-            username: newUser.username,
+            username: newUser.user,
             email: newUser.email,
         })
     } catch (err) {
@@ -88,7 +88,7 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
         }
         const userId = user._id as Types.ObjectId
         const token = jwt.sign(
-            { userId: userId, username: user.username, email: user.email, avatar: user.avatar } satisfies UserPayload,
+            { userId: userId, user: user.user, email: user.email, avatar: user.avatar } satisfies UserPayload,
             process.env.JWT_SECRET,
             { expiresIn: "1h" }, // token 有效期 (1 小時)
         )
@@ -117,7 +117,7 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
             token,
             user: {
                 _id: user._id,
-                username: user.username,
+                username: user.user,
                 email: user.email,
             },
         })

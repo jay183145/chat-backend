@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
-import { Message, Reactions } from "../types/message"
+import { Message, Reaction } from "../types/message.js"
 
-const reactionsSchema = new mongoose.Schema<Reactions>(
+const reactionsSchema = new mongoose.Schema<Reaction>(
     {
         like: { type: Number, default: 0 },
         love: { type: Number, default: 0 },
@@ -11,10 +11,10 @@ const reactionsSchema = new mongoose.Schema<Reactions>(
 )
 
 const messageSchema = new mongoose.Schema<Message>({
-    conversationId: { type: mongoose.Schema.Types.ObjectId, ref: "Conversation" },
-    userId: Number,
-    user: String,
-    avatar: String,
+    conversationId: Number,
+    userId: { type: Number, required: true },
+    user: { type: String, required: true },
+    avatar: { type: String, required: false },
     messageType: { type: String, enum: ["text", "image", "system"], default: "text" },
     message: String,
     reactions: { type: reactionsSchema, default: { like: 0, love: 0, laugh: 0 } },
