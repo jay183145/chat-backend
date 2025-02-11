@@ -6,3 +6,11 @@ export interface UserDocument extends Document {
     avatar: string
     password: string
 }
+
+// 用於 JWT 的 payload
+export interface UserPayload {
+    userId: Types.ObjectId
+    username: string
+    email: string
+    avatar: string
+}
