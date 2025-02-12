@@ -13,9 +13,10 @@ const app = express()
 // 啟用 CORS 與 JSON 解析
 app.use(
     cors({
-        origin: process.env.FRONTEND_URL || "http://localhost:3000", // 使用環境變數，如果未設定則使用預設值
+        origin: process.env.FRONTEND_URL || "http://localhost:3001", // 使用環境變數，如果未設定則使用預設值
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed HTTP methods
-        allowedHeaders: ["Content-Type"], // Allowed headers
+        allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+        credentials: true, // 允許憑證
         optionsSuccessStatus: 200, // 解決 OPTIONS 預檢請求的問題
     }),
 )
