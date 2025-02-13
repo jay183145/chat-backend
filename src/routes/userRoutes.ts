@@ -58,23 +58,23 @@ router.post("/register", async (req: Request, res: Response): Promise<void> => {
  */
 router.post("/login", async (req: Request, res: Response): Promise<void> => {
     try {
-        const { user, password } = req.body
+        const { password, email } = req.body
 
-        // 1. 檢查是否有傳 username 與 password
-        if (!user || !password) {
-            res.status(400).json({ code: 400, error: "Missing username or password" })
+        // 1. 檢查是否有傳 user 與 password
+        if (!password || !email) {
+            res.status(400).json({ code: 400, error: "Missing password or email" })
             return
         }
 
         // 2. 查詢是否有此使用者
-        const userData = await UserModel.findOne({ user })
+        const userData = await UserModel.findOne({ email })
         if (!userData) {
             res.status(404).json({ code: 404, error: "User not found" })
             return
         }
 
         // 3. 驗證密碼 (compare 明文 vs 雜湊後)
-        const isMatch = await bcrypt.compare(password, user.password)
+        const isMatch = await bcrypt.compare(password, userData.password)
         if (!isMatch) {
             res.status(401).json({ code: 401, error: "Invalid credentials" })
             return
@@ -85,9 +85,9 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
             res.status(500).json({ code: 500, error: "JWT_SECRET is not set in the environment variables" })
             return
         }
-        const userId = user._id as Types.ObjectId
+        const userId = userData._id as Types.ObjectId
         const token = jwt.sign(
-            { userId: userId, user: user.user, email: user.email } satisfies UserPayload,
+            { userId: userId, user: userData.user, email: userData.email } satisfies UserPayload,
             process.env.JWT_SECRET,
             { expiresIn: "3h" }, // token 有效期 (3 小時)
         )
@@ -115,9 +115,9 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
             message: "Login successful",
             token,
             user: {
-                id: user._id,
-                user: user.user,
-                email: user.email,
+                id: userData._id,
+                user: userData.user,
+                email: userData.email,
             },
         })
     } catch (err) {
