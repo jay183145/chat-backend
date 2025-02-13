@@ -2,6 +2,7 @@ import mongoose from "mongoose"
 import User from "../models/User.js"
 import dotenv from "dotenv"
 import { users } from "../data/defaultUsers.js"
+import bcrypt from "bcrypt"
 
 dotenv.config()
 
@@ -20,8 +21,17 @@ async function seedUsers() {
         await User.deleteMany({})
         console.log("舊的 User 資料已刪除！")
 
-        // Insert the users into the collection
-        await User.insertMany(users)
+        // Hash passwords for all users
+        const saltRounds = 12
+        const hashedUsers = await Promise.all(
+            users.map(async (user) => ({
+                ...user,
+                password: await bcrypt.hash(user.password, saltRounds),
+            })),
+        )
+
+        // Insert the users with hashed passwords into the collection
+        await User.insertMany(hashedUsers)
         console.log("Users created successfully!")
     } catch (error) {
         console.error("Error creating users:", error)
