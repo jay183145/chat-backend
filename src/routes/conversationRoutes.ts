@@ -12,9 +12,7 @@ const router = Router()
 router.get("/", async (req: Request, res: Response) => {
     try {
         const conversations = await Conversation.find().sort({ timestamp: -1 })
-        // 將 MongoDB 的 _id 改為 id 傳給前端
-        const data = conversations.map((conv) => ({ id: conv._id, ...conv.toObject() }))
-        res.json(data)
+        res.json(conversations)
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
