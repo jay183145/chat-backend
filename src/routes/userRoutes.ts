@@ -43,6 +43,7 @@ router.post("/register", async (req: Request, res: Response): Promise<void> => {
         // 4. 回傳成功資訊
         res.status(201).json({
             id: newUser._id,
+            userId: newUser.userId,
             user: newUser.user,
             email: newUser.email,
         })
@@ -85,9 +86,14 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
             res.status(500).json({ code: 500, error: "JWT_SECRET is not set in the environment variables" })
             return
         }
-        const userId = userData._id as Types.ObjectId
+        const id = userData._id as Types.ObjectId
         const token = jwt.sign(
-            { userId: userId, user: userData.user, email: userData.email } satisfies UserPayload,
+            {
+                id,
+                userId: userData.userId,
+                user: userData.user,
+                email: userData.email,
+            } satisfies UserPayload,
             process.env.JWT_SECRET,
             { expiresIn: "3h" }, // token 有效期 (3 小時)
         )
@@ -116,6 +122,7 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
             token,
             user: {
                 id: userData._id,
+                userId: userData.userId,
                 user: userData.user,
                 email: userData.email,
             },

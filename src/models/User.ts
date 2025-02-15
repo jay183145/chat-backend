@@ -3,6 +3,7 @@ import { UserDocument } from "../types/user.js"
 
 export const UserSchema = new Schema<UserDocument>(
     {
+        userId: { type: Number, required: true, unique: true },
         user: { type: String, required: true, unique: true },
         email: { type: String, required: true, unique: true },
         avatar: { type: String, default: "" },

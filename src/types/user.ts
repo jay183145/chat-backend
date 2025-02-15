@@ -3,6 +3,7 @@ import { Document, Types } from "mongoose"
 export interface UserDocument extends Document, UserData {}
 
 export interface UserData {
+    userId: number
     user: string
     email: string
     avatar: string
@@ -17,7 +18,8 @@ export type User = {
 
 // 用於 JWT 的 payload
 export interface UserPayload {
-    userId: Types.ObjectId
+    id: Types.ObjectId
+    userId: number
     user: string
     email: string
 }
