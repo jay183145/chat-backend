@@ -45,6 +45,7 @@ router.post("/register", async (req: Request, res: Response): Promise<void> => {
             id: newUser._id,
             userId: newUser.userId,
             user: newUser.user,
+            avatar: newUser.avatar,
             email: newUser.email,
         })
     } catch (err) {
@@ -124,6 +125,7 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
                 id: userData._id,
                 userId: userData.userId,
                 user: userData.user,
+                avatar: userData.avatar,
                 email: userData.email,
             },
         })
