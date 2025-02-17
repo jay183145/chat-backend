@@ -8,6 +8,8 @@ export const UserSchema = new Schema<UserDocument>(
         email: { type: String, required: true, unique: true },
         avatar: { type: String, default: "" },
         password: { type: String, required: true },
+        createdAt: { type: Date },
+        updatedAt: { type: Date },
     },
     { timestamps: true },
 )

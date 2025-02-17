@@ -47,6 +47,8 @@ router.post("/register", async (req: Request, res: Response): Promise<void> => {
             user: newUser.user,
             avatar: newUser.avatar,
             email: newUser.email,
+            createdAt: newUser.createdAt,
+            updatedAt: newUser.updatedAt,
         })
     } catch (err) {
         console.error("Error creating user:", err)
@@ -127,12 +129,51 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
                 user: userData.user,
                 avatar: userData.avatar,
                 email: userData.email,
+                createdAt: userData.createdAt,
+                updatedAt: userData.updatedAt,
             },
         })
     } catch (err) {
         console.error("Login error:", err)
         res.status(500).json({ code: 500, error: "Server error" })
         return
+    }
+})
+
+/**
+ * 獲取所有使用者
+ * GET /users
+ */
+router.get("/users", async (_req: Request, res: Response): Promise<void> => {
+    try {
+        const users = await UserModel.find(
+            {}, // 查詢條件：空物件代表查詢所有
+            {
+                // 投影：只選擇要回傳的欄位
+                _id: 1,
+                userId: 1,
+                user: 1,
+                avatar: 1,
+                email: 1,
+                createdAt: 1,
+                updatedAt: 1,
+            },
+        )
+
+        res.json(
+            users.map((user) => ({
+                id: user._id.toString(),
+                userId: user.userId,
+                user: user.user,
+                avatar: user.avatar,
+                email: user.email,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
+            })),
+        )
+    } catch (err) {
+        console.error("Error fetching users:", err)
+        res.status(500).json({ code: 500, error: "Failed to fetch users" })
     }
 })
 

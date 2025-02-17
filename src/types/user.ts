@@ -1,6 +1,9 @@
 import { Document, Types } from "mongoose"
 
-export interface UserDocument extends Document, UserData {}
+export interface UserDocument extends Document, UserData {
+    createdAt: Date
+    updatedAt: Date
+}
 
 export interface UserData {
     userId: number
